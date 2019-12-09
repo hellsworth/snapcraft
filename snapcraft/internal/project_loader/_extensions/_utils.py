@@ -180,8 +180,6 @@ def _apply_extension(
 def _apply_extension_property(existing_property: Any, extension_property: Any):
     if existing_property:
 
-        if extension_property:
-
         # If the property is not scalar, merge them
         if isinstance(existing_property, list) and isinstance(extension_property, list):
  
