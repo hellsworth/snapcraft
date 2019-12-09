@@ -22,7 +22,8 @@ import importlib
 import logging
 import os
 import pkgutil
-from typing import Any, Dict, List, Set, Type  # noqa: F401
+from typing import Any, Dict, List, Optional, Set, Type
+#from typing import Any, Dict, List, Set, Type  # noqa: F401
 import json
 
 from .. import errors
@@ -50,7 +51,8 @@ def apply_extensions(yaml_data: Dict[str, Any]) -> Dict[str, Any]:
     # Don't modify the dict passed in
     yaml_data = copy.deepcopy(yaml_data)
     original_yaml_data = copy.deepcopy(yaml_data)
-    base = yaml_data.get("base")
+    base: Optional[str] = yaml_data.get("base")
+    #base = yaml_data.get("base")
 
     # Mapping of extension names to set of app names to which the extension needs to be
     # applied.
@@ -120,7 +122,7 @@ def supported_extension_names() -> List[str]:
 
 
 def _load_extension(
-    base: str, extension_name: str, yaml_data: Dict[str, Any]
+    base: Optional[str], extension_name: str, yaml_data: Dict[str, Any]
 ) -> Extension:
     extension_class = find_extension(extension_name)
 
@@ -182,7 +184,7 @@ def _apply_extension_property(existing_property: Any, extension_property: Any):
 
         # If the property is not scalar, merge them
         if isinstance(existing_property, list) and isinstance(extension_property, list):
-           
+ 
             # Additional check if the existing_property is a list of OrderedDicts
             temp_list = []
             seen = set()
@@ -201,7 +203,6 @@ def _apply_extension_property(existing_property: Any, extension_property: Any):
                     seen.add(item)
             for dictitem in extension_property:
                 if isinstance(dictitem, dict):
-                    print("5. it's a dict")
                     for key, value in dictitem.items():
                         if key not in seen:
                             seen.add(key)
