@@ -23,7 +23,7 @@ import logging
 import os
 import pkgutil
 from typing import Any, Dict, List, Optional, Set, Type
-#from typing import Any, Dict, List, Set, Type  # noqa: F401
+
 import json
 
 from .. import errors
@@ -52,7 +52,6 @@ def apply_extensions(yaml_data: Dict[str, Any]) -> Dict[str, Any]:
     yaml_data = copy.deepcopy(yaml_data)
     original_yaml_data = copy.deepcopy(yaml_data)
     base: Optional[str] = yaml_data.get("base")
-    #base = yaml_data.get("base")
 
     # Mapping of extension names to set of app names to which the extension needs to be
     # applied.
@@ -162,7 +161,9 @@ def _apply_extension(
 
         for property_name, property_value in part_extension.items():
             # part_definition_unordered[property_name] is a dict
-            part_definition[property_name] = _apply_extension_property(part_definition.get(property_name), property_value)
+            part_definition[property_name] = _apply_extension_property(
+                part_definition.get(property_name), property_value
+            )
 
         # Stores the extension's list of part_snippets in each part
         parts[part_name] = part_definition
@@ -181,11 +182,11 @@ def _apply_extension_property(existing_property: Any, extension_property: Any):
     if existing_property:
 
         if isinstance(existing_property, list) and isinstance(extension_property, list):
- 
+
             # Additional check if the existing_property is a list of OrderedDicts
             temp_list = []
             seen = set()
-            
+
             # Safely copy the list of OrderedDicts to a list of dicts
             for item in existing_property:
                 if isinstance(item, collections.OrderedDict):
@@ -227,7 +228,7 @@ def _merge_lists(list1: List[str], list2: List[str]) -> List[str]:
     seen = set()  # type: Set[str]
     merged = list()  # type: List[str]
 
-    for item in list1+list2:
+    for item in list1 + list2:
         if item not in seen:
             seen.add(item)
             merged.append(item)
